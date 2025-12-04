@@ -1,0 +1,11 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Common/Common.csproj" />
+  <Project Path="InjectorApp/InjectorApp.csproj" />
+  <Project Path="ManagedLibrary/ManagedLibrary.csproj" />
+  <Project Path="NativeLibrary/NativeLibrary.vcxproj" />
+</Solution>
