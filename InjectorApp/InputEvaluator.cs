@@ -11,6 +11,7 @@ namespace InjectorApp
             $"- {Commands.ProcessInfo} -> get some information about the process\n" +
             $"- {Commands.GetWindows} -> get the window main nane\n" +
             $"- {Commands.GetSessionInfo} -> get the session id.\n" +
+            $"- {Commands.GetUsername} -> get the username (use it when you are logged in).\n" +
             $"- {EXIT} -> to stop the program (or just CTRL+C).\n";
          
 

@@ -37,11 +37,13 @@ namespace InjectorApp
                 return;
             }
 
-            if (injectionOutcome) {
-                Console.WriteLine("InjectionSuccessful!");
+            if (injectionOutcome)
+            {
+                Console.WriteLine("[MAIN] - Injection Successful!");
             }
-            else {
-                Console.WriteLine($"Error injecting .dll file into process.");
+            else
+            {
+                Console.WriteLine("[MAIN] - Error injecting .dll file into process.");
                 return;
             }
 

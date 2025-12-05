@@ -1,5 +1,6 @@
 ﻿using Common;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
@@ -137,6 +138,10 @@ namespace ManagedLibrary
 
                     case Commands.GetSessionInfo:
                         return HandleGetSessionInfoCommand();
+
+                    case Commands.GetUsername:
+                        return HandleGetUsernameCommand();
+
                     default:
                         return $"ERROR: Comando sconosciuto '{cmd}'";
                 }
@@ -226,7 +231,127 @@ namespace ManagedLibrary
             }
         }
 
+        /// <summary>
+        /// Get the logged in username
+        /// </summary>
+        private static string HandleGetUsernameCommand()
+        {
+            try
+            {
+                var username = GetUsername();
+                return $"OK: {username}";
+            }
+            catch (Exception ex)
+            {
+                return $"ERROR: {ex.Message}";
+            }
+        }
+
         /** Some utility methods: **/
+
+        /// <summary>
+        /// Get the current logged username
+        /// </summary>
+        private static string GetUsername()
+        {
+            try
+            {
+                // Method 1: Using Session
+                var session = FindSession();
+                if (session != null)
+                {
+                    var loggedInUser = GetPropertyValue(session, "LoggedInUser");
+                    if (loggedInUser != null)
+                    {
+                        var name = GetPropertyValue(loggedInUser, "Name")
+                                ?? GetPropertyValue(loggedInUser, "ScreenName");
+                        if (name != null)
+                            return name.ToString();
+                    }
+                }
+
+                // Method 2: Using UserManager
+                var userManager = FindStaticInstanceByName("UserManager");
+                if (userManager != null)
+                {
+                    var currentUser = GetPropertyValue(userManager, "CurrentUser")
+                                   ?? GetPropertyValue(userManager, "LocalUser");
+                    if (currentUser != null)
+                    {
+                        var screenName = GetPropertyValue(currentUser, "ScreenName")
+                                      ?? GetPropertyValue(currentUser, "Name");
+                        if (screenName != null)
+                            return screenName.ToString();
+                    }
+                }
+
+                return "NOT_LOGGED_IN";
+            }
+            catch
+            {
+                return "ERROR_GETTING_USERNAME";
+            }
+        }
+
+        /// <summary>
+        /// Find the session object (FlsClientSession)
+        /// </summary>
+        private static object FindSession()
+        {
+            // Method 1: using CardsetReleaseManager.s_session
+            var type = FindTypeByName("CardsetReleaseManager");
+            if (type != null)
+            {
+                var session = GetStaticValue(type, "s_session");
+                if (session != null)
+                    return session;
+            }
+
+            // Method 2: using SessionManager
+            var sessionManager = FindStaticInstanceByName("SessionManager");
+            if (sessionManager != null)
+            {
+                var session = GetPropertyValue(sessionManager, "Session")
+                           ?? GetPropertyValue(sessionManager, "CurrentSession")
+                           ?? GetPropertyValue(sessionManager, "ClientSession");
+                if (session != null)
+                    return session;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Find static instance by simple type name (searches for Instance/Current property)
+        /// </summary>
+        private static object FindStaticInstanceByName(string simpleName)
+        {
+            var type = FindTypeByName(simpleName);
+            if (type == null)
+                return null;
+
+            // Search Instance
+            var instance = GetStaticValue(type, "Instance");
+            if (instance != null)
+                return instance;
+
+            // Search Current
+            instance = GetStaticValue(type, "Current");
+            if (instance != null)
+                return instance;
+
+            // Search s_instance (private pattern)
+            instance = GetStaticValue(type, "s_instance");
+            if (instance != null)
+                return instance;
+
+            // Search m_instance (other pattern)
+            instance = GetStaticValue(type, "m_instance");
+            if (instance != null)
+                return instance;
+
+            return null;
+        }
 
         private static Type FindTypeByName(string simpleName)
         {
