@@ -69,9 +69,19 @@ This hybrid architecture is required in cases where automatic execution upon inj
 
 ### Build
 
-- Open the solution: **MTGDllInjector.sln**
+***From Visual Studio***
+- Open the solution: **MTGDllInjector.slnx**
 - Compile in: Release / x64
+
+***From Terminal***
+- Exec the following command:
+```bash
+msbuild MTGDllInjector.slnx /t:Restore; msbuild MTGDllInjector.slnx /p:Configuration=Release /p:Platform=x64
+```
+> You can use the **MTGDllInjector.sln** file as well for the **Terminal** Build
+
 > The injected DLLs **must match the architecture** of the target process.
+
 
 ---
 
