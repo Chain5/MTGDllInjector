@@ -33,7 +33,7 @@ namespace InjectorApp
             {
                 Console.WriteLine("Usage:");
                 Console.WriteLine("   DllInjector.exe <processId> <dllPath>");
-                Console.WriteLine("   DllInjector.exe -exe <pathToExe> <dllPath>");
+                Console.WriteLine("   DllInjector.exe -appref <pathToAppRef> <dllPath>");
                 return;
             }
 
