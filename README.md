@@ -63,9 +63,9 @@ This hybrid architecture is required in cases where automatic execution upon inj
 ### Prerequisites
 
 - **Windows**
+- **Desktop C++ development tools** → [Download x64 version from here](https://learn.microsoft.com/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-supported-redistributable-version)
 - **Visual Studio 2022**
 - **.NET SDK (7+)**
-- **Desktop C++ development tools**
 
 ### Build
 
